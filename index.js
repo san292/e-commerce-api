@@ -3,6 +3,10 @@ const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const PORT = process.env.PORT || 3000;
+
+const userRoute = require('./app/router/user');
+const authRoute = require('./app/router/auth');
+
 dotenv.config();
 mongoose
   .connect(process.env.MONGO_URL)
@@ -10,6 +14,10 @@ mongoose
   .catch((error) => {
     console.error(error);
   });
+app.use(express.json());
+
+app.use('/api/users', userRoute);
+app.use('/api/auth', authRoute);
 
 app.listen(PORT, () => {
   console.log(`backend server is running in localhost ${PORT}`);
