@@ -20,13 +20,13 @@ const verifyToken = (req, res, next) => {
 
 //  function for verify token and Authorisation
 const verifyTokenAndAuthorization = (req, res, next) => {
-  console.log('reqqqqqqqqqqqqqqqqqq 23', req);
+  // console.log('reqqqqqqqqqqqqqqqqqq 23', req.user.isAdmin);
   verifyToken(req, res, () => {
-    console.log('req.user.id', req.user.id);
-    console.log('req.params.id', req.params.id);
-    console.log('reqqqqqqqqqqqqqqqqqq 27', req);
+    // console.log('req.user.id', req.user.id);
+    // console.log('req.params.id', req.params.id);
+    console.log('reqqqqqqqqqqqqqqqqqq 27', req.user.isadmin);
     if (req.user.id === req.params.id || req.user.isadmin) {
-      console.log('vous etes autorisé 23 ', req.user.id);
+      console.log('vous etes autorisé 29 ', req.user.isadmin);
       next();
     } else {
       res.status(403).json("vous n'êtes pas autorisé à faire cette action");
@@ -34,11 +34,12 @@ const verifyTokenAndAuthorization = (req, res, next) => {
   });
 };
 
-// function for verify token and Admin
+//  function for verify token and Admin
 const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
-    // console.log('req.user.isAdmin 39', req.user.isAdmin);
-    if (req.user.isAdmin) {
+    console.log('req.user.isAdmin 40', req.user.isadmin);
+    if (req.user.isadmin) {
+      console.log('connecte en tant qu admin');
       next();
     } else {
       res.status(403).json('action reservé aux Admins!');

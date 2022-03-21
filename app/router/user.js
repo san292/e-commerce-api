@@ -24,7 +24,7 @@ router.get('/', verifyTokenAndAuthorization, async (req, res) => {
   const query = req.query.new;
   try {
     const users = query
-      ? await User.find().sort({ _id: -1 }).limit(5)
+      ? await User.find().sort({ _id: -2 }).limit(5)
       : await User.find();
     res.status(200).json(users);
   } catch (err) {
@@ -35,7 +35,9 @@ router.get('/', verifyTokenAndAuthorization, async (req, res) => {
 //GET USER STATS
 router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
+  console.log('datebefore', date);
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+  console.log('dateafter', date);
 
   try {
     const data = await User.aggregate([
