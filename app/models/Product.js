@@ -29,6 +29,7 @@ const ProductSchema = new mongoose.Schema(
       required: true
     }
   },
-  { timestamps: true }
+  { timestamps: true },
+  { typeKey: '$type' }
 );
 module.exports = mongoose.model('Product', ProductSchema);
