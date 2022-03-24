@@ -9,6 +9,8 @@ const authRoute = require('./app/router/auth');
 const productRoute = require('./app/router/product');
 const cartRoute = require('./app/router/cart');
 const orderRoute = require('./app/router/order');
+const stripeRoute = require('./app/router/stripe');
+const cors = require('cors');
 
 dotenv.config();
 mongoose
@@ -24,6 +26,7 @@ app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/carts', cartRoute);
 app.use('/api/orders', orderRoute);
+app.use('/api/checkout', stripeRoute);
 
 app.listen(PORT, () => {
   console.log(`backend server is running in localhost ${PORT}`);
