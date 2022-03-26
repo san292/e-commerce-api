@@ -4,71 +4,21 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin
-} = require('./verifyToken');
+} = require('../middleware/verifyToken');
+const productController = require('../controllers/productController');
 
 //CREATE PRODUCT
-router.post('/', verifyTokenAndAdmin, async (req, res) => {
-  const newProduct = new Product(req.body);
-  console.log('newProduct', newProduct);
-  try {
-    const savedProduct = await newProduct.save();
-    res.status(200).json(savedProduct);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
+router.post('/', verifyTokenAndAdmin, productController.createProduct);
 
 //GET Product
 
-router.get('/find/:id', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    console.log('prduit depuis le fichier product L26', product);
-    res.status(200).json(product);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get('/find/:id', productController.getOneProduct);
 
 // GET ALL Product
-router.get('/', async (req, res) => {
-  const qNew = req.query.new;
-  const qCategory = req.query.category;
-  try {
-    let products;
-
-    if (qNew) {
-      products = await Product.find().sort({ createdAt: -1 }).limit(2);
-    } else if (qCategory) {
-      products = await Product.find({
-        categories: {
-          $in: [qCategory]
-        }
-      });
-    } else {
-      products = await Product.find();
-    }
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get('/', productController.getAllProduct);
 
 //  UPDATE
-router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
-  try {
-    const updateProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body
-      },
-      { new: true }
-    );
-    res.status(200).json(updateProduct);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.put('/:id', verifyTokenAndAdmin, productController.updateProduct);
 
 //DELETE
 router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {

@@ -1,36 +1,17 @@
+const router = require('express').Router();
 const User = require('../models/User');
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin
-} = require('./verifyToken');
-
-const router = require('express').Router();
+} = require('../middleware/verifyToken');
+const userController = require('../controllers/userController');
 
 //GET USER
-router.get('/find/:id', verifyTokenAndAuthorization, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    console.log('user depuis fichier user 47', user);
-    const { password, ...others } = user._doc;
-    res.status(200).json(others);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get('/find/:id', verifyTokenAndAuthorization, userController.getUser);
 
 //GET ALL USER
-router.get('/', verifyTokenAndAuthorization, async (req, res) => {
-  const query = req.query.new;
-  try {
-    const users = query
-      ? await User.find().sort({ _id: -2 }).limit(5)
-      : await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get('/', verifyTokenAndAuthorization, userController.getAllUser);
 
 //GET USER STATS
 router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
@@ -61,35 +42,9 @@ router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
 });
 
 //UPDATE
-router.put('/:id', verifyTokenAndAuthorization, async (req, res) => {
-  const password = req.body.password;
-  if (password) {
-    password = CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString();
-  }
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body
-      },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.put('/:id', verifyTokenAndAuthorization, userController.updateUser);
 
 //DELETE
-router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    console.log('delete req params :', req.params.id);
-    res.status(200).json('User has been deleted...');
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.delete('/:id', verifyTokenAndAuthorization, userController.deleteUser);
 
 module.exports = router;
