@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
-  // console.log('req.user.isAdmin 6', req.user.isAdmin);
-  console.log('authHeader', authHeader);
+
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.JWT_KEY, (err, user) => {
@@ -20,11 +19,7 @@ const verifyToken = (req, res, next) => {
 
 //  function for verify token and Authorisation
 const verifyTokenAndAuthorization = (req, res, next) => {
-  // console.log('reqqqqqqqqqqqqqqqqqq 23', req.user.isAdmin);
   verifyToken(req, res, () => {
-    // console.log('req.user.id', req.user.id);
-    // console.log('req.params.id', req.params.id);
-    console.log('reqqqqqqqqqqqqqqqqqq 27', req.user.isadmin);
     if (req.user.id === req.params.id || req.user.isadmin) {
       console.log('vous etes autorisé 29 ', req.user.isadmin);
       next();

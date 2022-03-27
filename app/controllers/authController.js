@@ -1,66 +1,96 @@
 const User = require('../models/User');
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const asyncHandler = require('express-async-handler');
 
 const authController = {
-  register: async (req, res) => {
+  register: asyncHandler(async (req, res) => {
+    // vérifier si un des champs est vide
     console.log('req.body----------->', req.body);
-    const newUser = await new User({
-      username: req.body.username.trim(),
-      email: req.body.email.trim(),
-      password: CryptoJS.AES.encrypt(
-        req.body.password.trim(),
-        process.env.PASS_SECRET
-      ).toString()
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+      res.status(400);
+      throw new Error('tous les champs sont obligatoires');
+    }
+
+    // vérifier si l'utilsateur existe
+
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      res.status(400);
+      throw new Error('cet utilsateur existe déja');
+    }
+
+    // hacher le mot de passe
+
+    const hachedPassword = CryptoJS.AES.encrypt(
+      req.body.password.trim(),
+      process.env.PASS_SECRET
+    ).toString();
+
+    //créer l'utilsateur
+
+    const user = await User.create({
+      username,
+      email,
+      password: hachedPassword
     });
-    try {
-      if (!newUser) {
-        res.status(400);
-        throw new Error('tous les champs sont obligatoires !');
-      }
-      const savedUser = await newUser.save();
-      res.status(200).json(savedUser);
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  },
-  login: async (req, res) => {
-    try {
-      const user = await User.findOne({
-        username: req.body.username
+    if (user) {
+      res.status(201).json({
+        _id: user.id,
+        username: user.username,
+        email: user.email
       });
-
-      !user && res.status(401).json('Utilisateur non trouvé');
-
-      const hashedPassword = CryptoJS.AES.decrypt(
-        user.password,
-        process.env.PASS_SECRET
-      );
-
-      const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-      const inputPassword = req.body.password;
-
-      originalPassword !== inputPassword &&
-        res.status(401).json('mot de passe erroné');
-
-      const accesToken = jwt.sign(
-        {
-          id: user._id,
-          isadmin: user.isAdmin
-        },
-        process.env.JWT_KEY,
-        { expiresIn: '10d' }
-      );
-
-      const { password, ...others } = user._doc;
-
-      res.status(200).json({ ...others, accesToken });
-      console.log('userdoc--------->', user._doc);
-      console.log('accesToken--------->', accesToken);
-    } catch (error) {
-      res.status(500).json(error);
+    } else {
+      res.status(400);
+      throw new Error('donnée invalide');
     }
-  }
+  }),
+
+  login: asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // verifier l'email de l'utilisateur
+    const user = await User.findOne({
+      email
+    });
+    if (!user) {
+      res.status(400);
+      throw new Error('utilisateur non trouvé');
+    }
+
+    // verifier le mot de passe
+
+    const hashedPassword = CryptoJS.AES.decrypt(
+      user.password,
+      process.env.PASS_SECRET
+    );
+
+    const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    const inputPassword = password;
+
+    // creation du Token
+    const accesToken = jwt.sign(
+      {
+        id: user._id,
+        isadmin: user.isAdmin
+      },
+      process.env.JWT_KEY,
+      { expiresIn: '10d' }
+    );
+
+    if (user && originalPassword === inputPassword) {
+      res.status(200).json({
+        _id: user.id,
+        username: user.username,
+        email: user.email,
+        accesToken
+      });
+    } else {
+      res.status(400);
+      throw new Error('verifier votre email ou mot de passe');
+    }
+  })
 };
 
 module.exports = authController;

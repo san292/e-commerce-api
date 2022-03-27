@@ -8,7 +8,8 @@ const userController = {
     try {
       const user = await User.findById(req.params.id);
       const { password, ...others } = user._doc;
-      res.status(200).json(...others);
+
+      res.status(200).json(others);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -67,7 +68,7 @@ const userController = {
       throw new Error("l'utilisateur demandé n'existe pas");
     }
     await user.remove();
-    res.status(200).json(`l'utilisateur avecl'ID ${user.id} a été supprimé`);
+    res.status(200).json({ id: req.params.id }, `l'utilisateur a été supprimé`);
 
     // const deleteUser = await User.findByIdAndDelete(req.params.id);
     // res.status(500).json(` l'user ${deleteUser.username} a été supprimé`);

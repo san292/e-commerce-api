@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const res = require('express/lib/response');
-const Order = require('../models/Order');
+
 const {
   verifyToken,
   verifyTokenAndAuthorization,

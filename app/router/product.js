@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Product = require('../models/Product');
+
 const {
   verifyToken,
   verifyTokenAndAuthorization,
@@ -21,14 +21,6 @@ router.get('/', productController.getAllProduct);
 router.put('/:id', verifyTokenAndAdmin, productController.updateProduct);
 
 //DELETE
-router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
-  try {
-    await Product.findByIdAndDelete(req.params.id);
-    console.log('delete req params :', req.params.id);
-    res.status(200).json('product has been deleted...');
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.delete('/:id', verifyTokenAndAdmin, productController.deleteProduct);
 
 module.exports = router;
