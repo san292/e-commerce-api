@@ -4,7 +4,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 const errorMiddleware = require('./app/middleware/errorMiddleware');
 const connectDB = require('./app/config/db');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 dotenv.config();
 const userRoute = require('./app/router/user');
 const authRoute = require('./app/router/auth');
@@ -12,6 +12,7 @@ const productRoute = require('./app/router/product');
 const cartRoute = require('./app/router/cart');
 const orderRoute = require('./app/router/order');
 const stripeRoute = require('./app/router/stripe');
+
 const cors = require('cors');
 
 corsOptions = {
