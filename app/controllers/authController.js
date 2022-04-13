@@ -84,6 +84,7 @@ const authController = {
         _id: user.id,
         username: user.username,
         email: user.email,
+        isadmin: user.isAdmin,
         accesToken
       });
     } else {
