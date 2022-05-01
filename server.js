@@ -4,7 +4,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 const errorMiddleware = require('./app/middleware/errorMiddleware');
 const connectDB = require('./app/config/db');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 dotenv.config();
 const userRoute = require('./app/router/user');
 const authRoute = require('./app/router/auth');
@@ -25,6 +25,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// app.get('/api', (_, res) => {
+//   res.send({
+//     message: 'hello toi '
+//   });
+// });
+// app.get('/api/products', productRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
