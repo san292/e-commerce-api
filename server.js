@@ -12,6 +12,7 @@ const productRoute = require('./app/router/product');
 const cartRoute = require('./app/router/cart');
 const orderRoute = require('./app/router/order');
 const stripeRoute = require('./app/router/stripe');
+
 const cors = require('cors');
 
 corsOptions = {
