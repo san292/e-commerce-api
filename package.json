@@ -6,7 +6,13 @@
   "scripts": {
     "start": "node server.js",
     "watch": "nodemon server.js",
-    "client": "cd ecommerce && npm start"
+    "client": "cd ecommerce && npm start",
+    "install-client" : "cd ecommerce && npm install ",
+    "heroku-postbuild" : "npm run install-client && npm run build",
+    "build" : "cd client && npm run build"
+  },
+  "engines" : {
+  "node": "14.x"
   },
   "keywords": [],
   "author": "",
