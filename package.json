@@ -8,8 +8,8 @@
     "watch": "nodemon server.js",
     "client": "cd ecommerce && npm start",
     "install-client" : "cd ecommerce && npm install ",
-    "heroku-postbuild" : "npm run install-client && npm run build",
-    "build" : "cd client && npm run build"
+    "heroku-postbuild": "cd ecommerce && npm install && npm run build",
+    "build" : "cd ecommerce && npm run build"
   },
   "engines" : {
   "node": "14.x"
