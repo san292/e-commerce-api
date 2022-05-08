@@ -38,3 +38,4 @@ app.use(errorMiddleware.errorHandler);
 app.listen(PORT, () => {
   console.log(`backend server is running in localhost ${PORT}`);
 });
+// MONGO_URI=mongodb+srv://sanman292:sanman292@cluster0.qbqlr.mongodb.net/assiashop?retryWrites=true&w=majority&wtimeoutMS=5000;
