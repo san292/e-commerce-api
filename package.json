@@ -3,12 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+<<<<<<< HEAD
   "engines": {
     "node": "14.x"
     },
   "scripts": {
     "start": "node server.js"
  },
+=======
+  "scripts": {
+    "start": "node server.js",
+    "watch": "nodemon server.js",
+    "client": "cd ecommerce && npm start",
+    "install-client" : "cd ecommerce && npm install ",
+    "heroku-postbuild": "cd ecommerce && npm install && npm run build",
+    "build" : "cd ecommerce && npm run build"
+  },
+  "engines" : {
+  "node": "14.x"
+  },
+>>>>>>> cc5660b1e5552174e67b6c97fb5f200e143dd265
   "keywords": [],
   "author": "",
   "license": "ISC",

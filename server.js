@@ -26,12 +26,22 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// app.get('/api', (_, res) => {
+//   res.send({
+//     message: 'hello toi '
+//   });
+// });
+// app.get('/api/products', productRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/carts', cartRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/checkout', stripeRoute);
+app.use(express.static(path.join(__dirname, '/ecommerce/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/ecommerce/build', 'index.html'));
+});
 
 app.use(errorMiddleware.errorHandler);
 
