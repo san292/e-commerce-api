@@ -38,10 +38,10 @@ app.use('/api/products', productRoute);
 app.use('/api/carts', cartRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/checkout', stripeRoute);
-app.use(express.static(path.join(__dirname, '/ecommerce/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/ecommerce/build', 'index.html'));
-});
+// app.use(express.static(path.join(__dirname, '/ecommerce/build')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '/ecommerce/build', 'index.html'));
+// });
 
 app.use(errorMiddleware.errorHandler);
 
